@@ -2,10 +2,7 @@
 
 namespace Orvital\Auth\Concerns;
 
-use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 trait AuthorizesRequests
@@ -13,9 +10,13 @@ trait AuthorizesRequests
     /**
      * Authorize a given action for the current user.
      *
+     * @param  mixed  $ability
+     * @param  mixed|array  $arguments
+     * @return \Illuminate\Auth\Access\Response
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function authorize(mixed $ability, mixed|array $arguments = []): Response
+    public function authorize($ability, $arguments = [])
     {
         [$ability, $arguments] = $this->parseAbilityAndArguments($ability, $arguments);
 
@@ -25,9 +26,14 @@ trait AuthorizesRequests
     /**
      * Authorize a given action for a user.
      *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
+     * @param  mixed  $ability
+     * @param  mixed|array  $arguments
+     * @return \Illuminate\Auth\Access\Response
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function authorizeForUser(Authenticatable|mixed $user, mixed $ability, mixed|array $arguments = []): Response
+    public function authorizeForUser($user, $ability, $arguments = [])
     {
         [$ability, $arguments] = $this->parseAbilityAndArguments($ability, $arguments);
 
@@ -36,8 +42,12 @@ trait AuthorizesRequests
 
     /**
      * Guesses the ability's name if it wasn't provided.
+     *
+     * @param  mixed  $ability
+     * @param  mixed|array  $arguments
+     * @return array
      */
-    protected function parseAbilityAndArguments(mixed $ability, mixed|array $arguments): array
+    protected function parseAbilityAndArguments($ability, $arguments)
     {
         if (is_string($ability) && ! str_contains($ability, '\\')) {
             return [$ability, $arguments];
@@ -50,8 +60,11 @@ trait AuthorizesRequests
 
     /**
      * Normalize the ability name that has been guessed from the method name.
+     *
+     * @param  string  $ability
+     * @return string
      */
-    protected function normalizeGuessedAbilityName(string $ability): string
+    protected function normalizeGuessedAbilityName($ability)
     {
         $map = $this->resourceAbilityMap();
 
@@ -60,8 +73,13 @@ trait AuthorizesRequests
 
     /**
      * Authorize a resource action based on the incoming request.
+     *
+     * @param  string|array  $model
+     * @param  string|array|null  $parameter
+     * @param  \Illuminate\Http\Request|null  $request
+     * @return void
      */
-    public function authorizeResource(string|array $model, string|array $parameter = null, array $options = [], Request $request = null): void
+    public function authorizeResource($model, $parameter = null, array $options = [], $request = null)
     {
         $model = is_array($model) ? implode(',', $model) : $model;
 
@@ -84,8 +102,10 @@ trait AuthorizesRequests
 
     /**
      * Get the map of resource methods to ability names.
+     *
+     * @return array
      */
-    protected function resourceAbilityMap(): array
+    protected function resourceAbilityMap()
     {
         return [
             'index' => 'browse',
@@ -100,8 +120,10 @@ trait AuthorizesRequests
 
     /**
      * Get the list of resource methods which do not have model parameters.
+     *
+     * @return array
      */
-    protected function resourceMethodsWithoutModels(): array
+    protected function resourceMethodsWithoutModels()
     {
         return ['index', 'create', 'store'];
     }
