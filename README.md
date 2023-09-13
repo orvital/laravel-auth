@@ -1,2 +1,2 @@
-# laravel-auth
+# Laravel Auth
 Laravel auth package.
