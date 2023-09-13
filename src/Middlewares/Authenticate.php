@@ -44,7 +44,7 @@ class Authenticate implements AuthenticatesRequests
      *
      * @throws \Illuminate\Auth\AuthenticationException
      */
-    protected function authenticate(Request $request, array $guards): void
+    protected function authenticate(Request $request, array $guards): mixed
     {
         if (empty($guards)) {
             $guards = [null];
@@ -68,18 +68,5 @@ class Authenticate implements AuthenticatesRequests
     {
         $redirectTo = $request->expectsJson() ? null : Url::route('login');
         throw new AuthenticationException('Unauthenticated.', $guards, $redirectTo);
-        throw new AuthenticationException(
-            'Unauthenticated.', $guards, $this->redirectTo($request)
-        );
-    }
-
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     *
-     * @return string|null
-     */
-    protected function redirectTo(Request $request)
-    {
-        //
     }
 }
