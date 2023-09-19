@@ -6,6 +6,7 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Validator;
 
 class AuthService
 {
@@ -15,19 +16,39 @@ class AuthService
     }
 
     /**
-     * Retrieve the user provider implementation.
-     */
-    public function provider(): EloquentUserProvider
-    {
-        return $this->auth->getProvider();
-    }
-
-    /**
      * Retrieve the currently authenticated user.
      */
     public function current(): ?Authenticatable
     {
         return $this->auth->user();
+    }
+
+    /**
+     * Register user credentials.
+     */
+    public function register(array $credentials, bool $login = false, bool $remember = false): Authenticatable
+    {
+        $user = tap($this->provider()->createModel()->fill($credentials))->save();
+
+        event(new Registered($user));
+
+        if ($login) {
+            $this->auth->login($user, $remember);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Retrieve user by credentials.
+     */
+    public function retrieve(array $credentials): Authenticatable|false
+    {
+        if ($this->auth->validate($credentials)) {
+            return $this->auth->getLastAttempted();
+        }
+
+        return false;
     }
 
     /**
@@ -43,9 +64,12 @@ class AuthService
      */
     public function findByCredentials(array $credentials): ?Authenticatable
     {
+        if (! isset($credentials['email']) || ! isset($credentials['password'])) {
+            return null;
+        }
+
         $user = $this->provider()->retrieveByCredentials($credentials);
 
-        // TODO: Set $credentials['password'] as null if not provided, required to avoid exception.
         $validated = $user && $this->provider()->validateCredentials($user, $credentials);
 
         return $validated ? $user : null;
@@ -57,9 +81,7 @@ class AuthService
     public function authenticate(array $credentials = [], bool $remember = false): Authenticatable|false
     {
         // TODO: Observe events to handle rate limits and others
-        $success = $this->auth->attempt($credentials, $remember);
-
-        if ($success) {
+        if ($this->auth->attempt($credentials, $remember)) {
             $this->auth->getSession()?->regenerate();
 
             return $this->current();
@@ -83,14 +105,42 @@ class AuthService
     }
 
     /**
-     * Register user credentials.
+     * Log the user out of the application.
      */
-    public function register(array $credentials, bool $login = false, bool $remember = false): Authenticatable
+    public function logout(): void
     {
-        $user = tap($this->provider()->createModel()->fill($credentials))->save();
+        // Logout event
+        $this->auth->logout();
 
-        event(new Registered($user));
+        $this->auth->getSession()?->invalidate();
 
-        return $login ? $this->login($user, $remember) : $user;
+        $this->auth->getSession()?->regenerateToken();
+    }
+
+    /**
+     * Validate credentials.
+     */
+    public function validate(array $credentials = []): bool
+    {
+        $validator = Validator::make($credentials, [
+            'email' => ['required', 'max:192', 'email'],
+            'password' => ['required', 'max:192'],
+        ]);
+
+        $validator->after(function ($validator) {
+            if (! $this->auth->validate($validator->validated())) {
+                $validator->errors()->add('email', trans('auth.failed'));
+            }
+        });
+
+        return $validator->passes();
+    }
+
+    /**
+     * Retrieve the user provider implementation.
+     */
+    public function provider(): EloquentUserProvider
+    {
+        return $this->auth->getProvider();
     }
 }
