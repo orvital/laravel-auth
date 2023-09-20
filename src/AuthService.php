@@ -6,12 +6,13 @@ use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Illuminate\Support\Traits\ForwardsCalls;
 
 class AuthService
 {
+    use ForwardsCalls;
+
     /**
-     * Service constructor.
-     *
      * @param  \Illuminate\Auth\SessionGuard|\Illuminate\Auth\AuthManager  $auth
      */
     public function __construct(
@@ -22,26 +23,26 @@ class AuthService
     /**
      * Retrieve the currently authenticated user.
      */
-    public function current(): ?Authenticatable
-    {
-        return $this->auth->user();
-    }
+    // public function current(): ?Authenticatable
+    // {
+    //     return $this->auth->user();
+    // }
 
     /**
      * Validate credentials.
      */
-    public function validate(array $credentials = []): bool
-    {
-        return $this->auth->validate($credentials);
-    }
+    // public function validate(array $credentials = []): bool
+    // {
+    //     return $this->auth->validate($credentials);
+    // }
 
     /**
      * Attempt to authenticate with the given credentials.
      */
-    public function attempt(array $credentials = [], bool $remember = false): bool
-    {
-        return $this->auth->attempt($credentials, $remember);
-    }
+    // public function attempt(array $credentials = [], bool $remember = false): bool
+    // {
+    //     return $this->auth->attempt($credentials, $remember);
+    // }
 
     /**
      * Authenticate user credentials.
@@ -89,10 +90,10 @@ class AuthService
     /**
      * Remove user from session, cookies and memory.
      */
-    public function logout(): void
-    {
-        $this->auth->logout();
-    }
+    // public function logout(): void
+    // {
+    //     $this->auth->logout();
+    // }
 
     /**
      * Retrieve the user provider implementation.
@@ -100,5 +101,17 @@ class AuthService
     public function provider(): EloquentUserProvider
     {
         return $this->auth->getProvider();
+    }
+
+    /**
+     * Handle calls to nonexistent or inaccessible methods.
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->forwardCallTo($this->auth, $method, $parameters);
+
+        // if (in_array($method, ['list', 'find', 'create', 'update', 'findByEmail'])) {
+        //     return $this->forwardDecoratedCallTo($this->repository, $method, $parameters);
+        // }
     }
 }

@@ -46,9 +46,7 @@ class Authenticate implements AuthenticatesRequests
      */
     protected function authenticate(Request $request, array $guards): mixed
     {
-        if (empty($guards)) {
-            $guards = [null];
-        }
+        $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
@@ -66,7 +64,18 @@ class Authenticate implements AuthenticatesRequests
      */
     protected function unauthenticated(Request $request, array $guards): void
     {
-        $redirectTo = $request->expectsJson() ? null : Url::route('login');
-        throw new AuthenticationException('Unauthenticated.', $guards, $redirectTo);
+        throw new AuthenticationException('Unauthenticated.', $guards, $this->redirectTo($request));
+    }
+
+    /**
+     * Get the path the user should be redirected to when they are not authenticated.
+     */
+    protected function redirectTo(Request $request): ?string
+    {
+        // if (! $request->expectsJson()) {
+        //     return Url::route('login');
+        // }
+
+        return null;
     }
 }
