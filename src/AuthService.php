@@ -2,21 +2,20 @@
 
 namespace Orvital\Auth;
 
-use Illuminate\Auth\AuthManager;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Auth\Factory as AuthFactory;
 
 class AuthService
 {
     /**
-     * Undocumented function
+     * Service constructor.
      *
-     * @param  \Illuminate\Auth\SessionGuard  $auth
+     * @param  \Illuminate\Auth\SessionGuard|\Illuminate\Auth\AuthManager  $auth
      */
     public function __construct(
-        protected AuthManager $auth,
+        protected AuthFactory $auth,
     ) {
     }
 
@@ -29,12 +28,31 @@ class AuthService
     }
 
     /**
-     * Retrieve user by credentials.
+     * Validate credentials.
      */
-    public function retrieve(array $credentials): Authenticatable|false
+    public function validate(array $credentials = []): bool
     {
-        if ($this->auth->validate($credentials)) {
-            return $this->auth->getLastAttempted();
+        return $this->auth->validate($credentials);
+    }
+
+    /**
+     * Attempt to authenticate with the given credentials.
+     */
+    public function attempt(array $credentials = [], bool $remember = false): bool
+    {
+        return $this->auth->attempt($credentials, $remember);
+    }
+
+    /**
+     * Authenticate user credentials.
+     */
+    public function authenticate(array $credentials = [], bool $remember = false): Authenticatable|false
+    {
+        // TODO: Observe events to handle rate limits and others
+        if ($this->auth->attempt($credentials, $remember)) {
+            $this->auth->getSession()?->regenerate();
+
+            return $this->current();
         }
 
         return false;
@@ -54,6 +72,18 @@ class AuthService
         }
 
         return $user;
+    }
+
+    /**
+     * Retrieve user by credentials.
+     */
+    public function retrieve(array $credentials): Authenticatable|false
+    {
+        if ($this->auth->validate($credentials)) {
+            return $this->auth->getLastAttempted();
+        }
+
+        return false;
     }
 
     /**
