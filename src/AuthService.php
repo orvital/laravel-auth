@@ -87,6 +87,14 @@ class AuthService
     }
 
     /**
+     * Remove user from session, cookies and memory.
+     */
+    public function logout(): void
+    {
+        $this->auth->logout();
+    }
+
+    /**
      * Retrieve the user provider implementation.
      */
     public function provider(): EloquentUserProvider

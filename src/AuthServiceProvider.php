@@ -2,19 +2,28 @@
 
 namespace Orvital\Auth;
 
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Orvital\Auth\Listeners\SendEmailVerificationNotification;
+use Orvital\Auth\Providers\EventProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
+    /**
+     * The provider class names.
+     */
+    protected array $providers = [
+        EventProvider::class,
+    ];
+
     /**
      * Register bindings.
      */
     public function register(): void
     {
+        // Register service providers.
+        foreach ($this->providers as $provider) {
+            $this->app->register($provider);
+        }
     }
 
     /**
@@ -22,10 +31,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(Registered::class, [
-            SendEmailVerificationNotification::class, 'handle',
-        ]);
-
         /**
          * Define default password rules
          */
