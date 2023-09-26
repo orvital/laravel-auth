@@ -21,30 +21,6 @@ class AuthService
     }
 
     /**
-     * Retrieve the currently authenticated user.
-     */
-    // public function current(): ?Authenticatable
-    // {
-    //     return $this->auth->user();
-    // }
-
-    /**
-     * Validate credentials.
-     */
-    // public function validate(array $credentials = []): bool
-    // {
-    //     return $this->auth->validate($credentials);
-    // }
-
-    /**
-     * Attempt to authenticate with the given credentials.
-     */
-    // public function attempt(array $credentials = [], bool $remember = false): bool
-    // {
-    //     return $this->auth->attempt($credentials, $remember);
-    // }
-
-    /**
      * Authenticate user credentials.
      */
     public function authenticate(array $credentials = [], bool $remember = false): Authenticatable|false
@@ -53,7 +29,7 @@ class AuthService
         if ($this->auth->attempt($credentials, $remember)) {
             $this->auth->getSession()?->regenerate();
 
-            return $this->current();
+            return $this->auth->user();
         }
 
         return false;

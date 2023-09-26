@@ -3,13 +3,14 @@
 namespace Orvital\Auth;
 
 use Illuminate\Support\AggregateServiceProvider;
-use Illuminate\Validation\Rules\Password;
 use Orvital\Auth\Providers\EventProvider;
+use Orvital\Auth\Providers\PasswordProvider;
 
 class AuthServiceProvider extends AggregateServiceProvider
 {
     protected $providers = [
         EventProvider::class,
+        PasswordProvider::class,
     ];
 
     /**
@@ -17,14 +18,6 @@ class AuthServiceProvider extends AggregateServiceProvider
      */
     public function boot(): void
     {
-        Password::defaults(function () {
-            $rule = Password::min(8);
-
-            if ($this->app->environment('production')) {
-                $rule = $rule->mixedCase()->numbers()->symbols()->uncompromised();
-            }
-
-            return $rule;
-        });
+        //
     }
 }
