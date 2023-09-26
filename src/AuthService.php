@@ -21,6 +21,18 @@ class AuthService
     }
 
     /**
+     * Register user.
+     */
+    public function register(array $attributes): Authenticatable
+    {
+        $user = tap($this->provider()->createModel()->fill($attributes))->save();
+
+        event(new Registered($user));
+
+        return $user;
+    }
+
+    /**
      * Authenticate user credentials.
      */
     public function authenticate(array $credentials = [], bool $remember = false): Authenticatable|false
@@ -33,22 +45,6 @@ class AuthService
         }
 
         return false;
-    }
-
-    /**
-     * Register user credentials.
-     */
-    public function register(array $credentials, bool $login = false, bool $remember = false): Authenticatable
-    {
-        $user = tap($this->provider()->createModel()->fill($credentials))->save();
-
-        event(new Registered($user));
-
-        if ($login) {
-            $this->auth->login($user, $remember);
-        }
-
-        return $user;
     }
 
     /**
