@@ -3,8 +3,8 @@
 namespace Orvital\Auth;
 
 use Illuminate\Support\AggregateServiceProvider;
+use Orvital\Auth\Passwords\PasswordProvider;
 use Orvital\Auth\Providers\EventProvider;
-use Orvital\Auth\Providers\PasswordProvider;
 
 class AuthServiceProvider extends AggregateServiceProvider
 {

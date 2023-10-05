@@ -16,8 +16,8 @@ class PasswordBroker implements PasswordBrokerContract
      * Create a new password broker instance.
      */
     public function __construct(
+        protected UserProviderContract $users,
         protected TokenRepositoryInterface $tokens,
-        protected UserProviderContract $users
     ) {
     }
 
@@ -35,7 +35,7 @@ class PasswordBroker implements PasswordBrokerContract
             return static::INVALID_USER;
         }
 
-        if ($this->tokenRecentlyCreated($user)) {
+        if ($this->tokenRecent($user)) {
             return static::RESET_THROTTLED;
         }
 
@@ -121,7 +121,7 @@ class PasswordBroker implements PasswordBrokerContract
     /**
      * Determine if the given user recently created a password reset token.
      */
-    public function tokenRecentlyCreated(CanResetPasswordContract $user): bool
+    public function tokenRecent(CanResetPasswordContract $user): bool
     {
         return $this->tokens->recentlyCreatedToken($user);
     }

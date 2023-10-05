@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\PasswordBrokerFactory as PasswordBrokerFactoryCont
 use Illuminate\Contracts\Foundation\Application as App;
 use InvalidArgumentException;
 use Orvital\Auth\Passwords\PasswordBroker;
+use Orvital\Auth\Passwords\Repositories\DatabaseTokenRepository;
 
 class PasswordBrokerManager implements PasswordBrokerFactoryContract
 {
@@ -46,8 +47,8 @@ class PasswordBrokerManager implements PasswordBrokerFactoryContract
         // password e-mails, as well as validating that password reset process as an
         // aggregate service of sorts providing a convenient interface for resets.
         return new PasswordBroker(
+            $this->app['auth']->createUserProvider($config['provider'] ?? null),
             $this->createTokenRepository($config),
-            $this->app['auth']->createUserProvider($config['provider'] ?? null)
         );
     }
 

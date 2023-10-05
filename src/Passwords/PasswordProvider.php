@@ -1,6 +1,6 @@
 <?php
 
-namespace Orvital\Auth\Providers;
+namespace Orvital\Auth\Passwords;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;

@@ -4,8 +4,8 @@ namespace Orvital\Auth\Concerns;
 
 use Illuminate\Notifications\Notifiable;
 use Orvital\Auth\Concerns\Authenticatable;
-use Orvital\Auth\Concerns\CanResetPassword;
 use Orvital\Auth\Concerns\MustVerifyEmail;
+use Orvital\Auth\Passwords\Concerns\CanResetPassword;
 
 /**
  * Notifiable trait required by MustVerifyEmail and CanResetPassword
