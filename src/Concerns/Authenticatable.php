@@ -2,10 +2,8 @@
 
 namespace Orvital\Auth\Concerns;
 
-use Illuminate\Support\Facades\Hash;
-
 /**
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Orvital\Auth\User
  *
  * @see \Illuminate\Contracts\Auth\Authenticatable
  */
@@ -56,22 +54,6 @@ trait Authenticatable
     public function getAuthPassword()
     {
         return $this->password;
-    }
-
-    /**
-     * Set the user password.
-     */
-    public function setAuthPassword($value): void
-    {
-        $this->password = $value;
-    }
-
-    /**
-     * Check if the user password matches the provided value.
-     */
-    public function checkAuthPassword(string $value): bool
-    {
-        return Hash::check($value, $this->password);
     }
 
     /**

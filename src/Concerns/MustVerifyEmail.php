@@ -5,7 +5,7 @@ namespace Orvital\Auth\Concerns;
 use Orvital\Auth\Notifications\VerifyEmail;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Orvital\Auth\User
  *
  * @see \Illuminate\Contracts\Auth\MustVerifyEmail
  */
