@@ -6,11 +6,15 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Orvital\Auth\Passwords\PasswordBrokerManager;
 
+/**
+ * @property-read \Illuminate\Foundation\Application $app
+ */
 class PasswordProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->extend('auth.password', function ($repository, $app) {
+        // Singleton / Deferred
+        $this->app->extend('auth.password', function ($instance, $app) {
             return new PasswordBrokerManager($app);
         });
     }
