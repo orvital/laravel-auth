@@ -10,11 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Orvital\Auth\Concerns\Authenticatable;
+use Orvital\Auth\Concerns\CanResetPassword;
 use Orvital\Auth\Concerns\MustVerifyEmail;
-use Orvital\Auth\Contracts\Notifiable as NotifiableContract;
-use Orvital\Auth\Passwords\Concerns\CanResetPassword;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, NotifiableContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
     use Authenticatable; // Custom
     use Authorizable; // External

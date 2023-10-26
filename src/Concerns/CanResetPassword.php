@@ -1,11 +1,11 @@
 <?php
 
-namespace Orvital\Auth\Passwords\Concerns;
+namespace Orvital\Auth\Concerns;
 
-use Orvital\Auth\Passwords\Notifications\ResetPassword;
+use Orvital\Auth\Notifications\ResetPassword;
 
 /**
- * @mixin \Orvital\Auth\User
+ * @mixin \Illuminate\Database\Eloquent\Model
  *
  * @see \Illuminate\Contracts\Auth\CanResetPassword
  */

@@ -3,7 +3,7 @@
 namespace Orvital\Auth\Concerns;
 
 /**
- * @mixin \Orvital\Auth\User
+ * @mixin \Illuminate\Database\Eloquent\Model
  *
  * @see \Illuminate\Contracts\Auth\Authenticatable
  */
