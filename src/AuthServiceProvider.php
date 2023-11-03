@@ -4,11 +4,14 @@ namespace Orvital\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\AggregateServiceProvider;
+use Orvital\Auth\AuthManager;
+use Orvital\Auth\EventProvider;
 use Orvital\Auth\Passwords\PasswordProvider;
-use Orvital\Auth\Providers\EventProvider;
 
 /**
  * @property-read \Illuminate\Foundation\Application $app
+ *
+ * @see \Illuminate\Auth\AuthServiceProvider
  */
 class AuthServiceProvider extends AggregateServiceProvider
 {
@@ -22,6 +25,11 @@ class AuthServiceProvider extends AggregateServiceProvider
         parent::register();
 
         $this->app->offsetUnset(Authenticatable::class);
+
+        // Singleton / Not Deferred
+        $this->app->extend('auth', function ($authManager, $app) {
+            return new AuthManager($app);
+        });
     }
 
     /**

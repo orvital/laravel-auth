@@ -8,6 +8,8 @@ use Orvital\Auth\Passwords\PasswordBrokerManager;
 
 /**
  * @property-read \Illuminate\Foundation\Application $app
+ *
+ * @see \Illuminate\Auth\Passwords\PasswordResetServiceProvider
  */
 class PasswordProvider extends ServiceProvider
 {
