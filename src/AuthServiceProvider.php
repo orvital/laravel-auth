@@ -27,9 +27,9 @@ class AuthServiceProvider extends AggregateServiceProvider
         $this->app->offsetUnset(Authenticatable::class);
 
         // Singleton / Not Deferred
-        // $this->app->extend('auth', function ($authManager, $app) {
-        //     return new AuthManager($app);
-        // });
+        $this->app->extend('auth', function ($authManager, $app) {
+            return new AuthManager($app);
+        });
     }
 
     /**
