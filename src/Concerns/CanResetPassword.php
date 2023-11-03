@@ -5,7 +5,7 @@ namespace Orvital\Auth\Concerns;
 use Orvital\Auth\Notifications\ResetPassword;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Orvital\Core\Eloquent\Model
  *
  * @see \Illuminate\Contracts\Auth\CanResetPassword
  */

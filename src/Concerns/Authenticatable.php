@@ -3,7 +3,7 @@
 namespace Orvital\Auth\Concerns;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin \Orvital\Core\Eloquent\Model
  *
  * @see \Illuminate\Contracts\Auth\Authenticatable
  */
@@ -14,7 +14,7 @@ trait Authenticatable
      *
      * @var string|null
      */
-    const REMEMBER_ME = 'remember_token';
+    const REMEMBER_ME = 'remember';
 
     /**
      * Initializer called on each new model instance.
