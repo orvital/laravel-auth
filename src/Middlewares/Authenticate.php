@@ -7,7 +7,6 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 
 class Authenticate implements AuthenticatesRequests
 {
@@ -72,10 +71,6 @@ class Authenticate implements AuthenticatesRequests
      */
     protected function redirectTo(Request $request): ?string
     {
-        // if (! $request->expectsJson()) {
-        //     return Url::route('login');
-        // }
-
-        return null;
+        return $request->expectsJson() ? null : route('login');
     }
 }

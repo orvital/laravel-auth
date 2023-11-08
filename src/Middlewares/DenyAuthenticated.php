@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 
 class DenyAuthenticated
 {
@@ -37,7 +36,7 @@ class DenyAuthenticated
             if ($this->auth->guard($guard)->check()) {
                 return $request->expectsJson()
                     ? throw new AuthorizationException('This action is unauthorized for authenticated users.')
-                    : Redirect::to('/home');
+                    : redirect('/home');
             }
         }
 
