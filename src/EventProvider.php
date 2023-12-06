@@ -27,7 +27,7 @@ class EventProvider extends EventServiceProvider
         'Illuminate\Auth\Events\Verified' => [],                // $user,       SerializesModels    OK
         'Illuminate\Auth\Events\PasswordReset' => [],           // $user,       SerializesModels    OK
         'Illuminate\Auth\Events\Registered' => [                // $user,       SerializesModels    OK
-            'Orvital\Auth\Listeners\SendEmailVerificationNotification',
+            'Illuminate\Auth\Listeners\SendEmailVerificationNotification',
         ],
         // Fired by Sanctum Guard
         'Orvital\Sanctum\Events\TokenAuthenticated' => [],      // $token,      --SerializesModels  OK

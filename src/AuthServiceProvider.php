@@ -5,8 +5,6 @@ namespace Orvital\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\AggregateServiceProvider;
 use Orvital\Auth\AuthManager;
-use Orvital\Auth\EventProvider;
-use Orvital\Auth\Passwords\PasswordProvider;
 
 /**
  * @property-read \Illuminate\Foundation\Application $app
@@ -15,11 +13,6 @@ use Orvital\Auth\Passwords\PasswordProvider;
  */
 class AuthServiceProvider extends AggregateServiceProvider
 {
-    protected $providers = [
-        EventProvider::class,
-        PasswordProvider::class,
-    ];
-
     public function register()
     {
         parent::register();
